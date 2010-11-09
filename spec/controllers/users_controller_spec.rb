@@ -329,6 +329,25 @@ describe UsersController do
         delete :destroy, :id => @user
         response.should redirect_to(users_path)
       end
+      
+      describe "can't destroy admin" do
+        it "should not delete an admin user" do
+          ad = Factory(:user, :email => "ad@example.com", :admin => true)
+          test_sign_in(ad)
+          lambda do
+            delete :destroy, :id => ad
+          end.should_not change(User, :count)
+        end
+        
+        it "should delete an not admin user" do
+          second = Factory(:user, :email => "another@example.com")
+          lambda do
+            delete :destroy, :id => second
+          end.should change(User, :count).by(-1)
+        end
+      
+      end
+      
     end
   end
 

@@ -70,6 +70,21 @@ describe "LayoutLinks" do
       response.should have_selector("a", :href => user_path(@user),
                                          :content => "Profile")
     end
+    
+    describe "delete links" do
+      it "should have a delete link" do
+        @user.toggle! :admin
+        visit users_path
+        response.should have_selector("a", :href => user_path(@user),
+                                           :content => "delete")
+      end
+    
+      it "should not have a delete link" do
+        visit users_path
+        response.should_not have_selector("a", :href => user_path(@user),
+                                           :content => "delete")
+      end
+    end
   end
 end
 

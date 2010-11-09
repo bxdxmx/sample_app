@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   before_filter :correct_user, :only => [:edit, :update]
   before_filter :admin_user,   :only => :destroy
+  before_filter :already_signed_in, :only => [:new, :create]
 
   def index
     @title = "All users"
@@ -55,6 +56,10 @@ class UsersController < ApplicationController
       deny_access unless signed_in?
     end
     
+    def already_signed_in
+      redirect_to( root_path, :notice => "Already signed in!" ) if signed_in?
+    end
+    
     def correct_user
       @user = User.find(params[:id])
       redirect_to( root_path ) unless current_user?(@user)
@@ -62,5 +67,6 @@ class UsersController < ApplicationController
     
     def admin_user
       redirect_to( root_path ) unless current_user.admin?
+      redirect_to( users_path, :notice => "can't delete an admin user" ) if User.find(params[:id]).admin?
     end
 end
