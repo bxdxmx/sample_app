@@ -5,6 +5,16 @@
   </div>
   <div class="actions">
     <%= f.submit "Submit" %>
+    <span id='content_count'>140</span>
   </div>
 <% end %>
+<script type='text/javascript'>
+    var content = document.getElementById('micropost_content');
+    var f = function(){
+    	document.getElementById('content_count').textContent = 140 - content.textLength;
+    };
+    
+    content.addEventListener('keypress', f, false);
+    content.addEventListener('keyup', f, false);
+</script>
 
